@@ -1,0 +1,360 @@
+openapi: "3.0.0"
+info:
+  version: "1.0.0"
+  title: "Video Game Trade API"
+servers:
+  - url: "http://localhost:8080"
+tags:
+  - name: "users"
+    description: "Operations for user management"
+  - name: "games"
+    description: "Operations for game management"
+  - name: "trade"
+    description: "Operations for trading"
+paths:
+  /users:
+    post:
+      tags:
+        - "users"
+      summary: "Register a new user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewUser"
+      responses:
+        "201":
+          description: "User created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: "Bad request"
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - "users"
+      operationId: getUser
+      summary: "Get a specific user"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+          description: "Operation completed successfully"
+        "404":
+          description: "User not found"
+    put:
+      tags:
+        - "users"
+      summary: "Update user information"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewUser"
+      responses:
+        "200":
+          description: "User updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: "Bad request"
+        "404":
+          description: "User not found"
+  /users/{id}/change-password:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+        - "users"
+      summary: "Change user password"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: "Password changed successfully"
+        "400":
+          description: "Bad request"
+        "404":
+          description: "User not found"
+  /users/{id}/reset-password:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+    post:
+      tags:
+        - "users"
+      summary: "Reset user password"
+      responses:
+        "200":
+          description: "Password reset successfully"
+        "400":
+          description: "Bad request"
+        "404":
+          description: "User not found"
+  /games:
+    post:
+      tags:
+        - "games"
+      summary: "Create a new video game"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewGame"
+      responses:
+        "201":
+          description: "Video game created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+
+  /games/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - "games"
+      summary: "Get a specific video game"
+      responses:
+        "200":
+          description: "Video game retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "400":
+          description: "Bad request"
+        "404":
+          description: "Game not found"
+    put:
+      tags:
+        - "games"
+      summary: "Update a video game"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewGame"
+      responses:
+        "200":
+          description: "Video game updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Game"
+        "400":
+          description: "Bad request"
+        "404":
+          description: "Game not found"
+    delete:
+      tags:
+        - "games"
+      summary: "Delete a video game"
+      responses:
+        "200":
+          description: "Game deleted successfully"
+        "404":
+          description: "Game not found"
+  /offers:
+    post:
+      tags:
+        - "offer"
+      summary: "Create a new trade offer"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewOffer"
+      responses:
+        "201":
+          description: "Trade offer created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Offer"
+        "400":
+          description: "Bad request"
+  /offers/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - "offer"
+      summary: "Get a specific trade offer"
+      responses:
+        "200":
+          description: "Trade offer retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Offer"
+        "404":
+          description: "Trade offer not found"
+    delete:
+      tags:
+        - "trade"
+      summary: "Delete a trade offer"
+      responses:
+        "200":
+          description: "Trade offer sucessfully deleted"
+        "404":
+          description: "Trade offer not found"
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          example: "johndoe@example.com"
+        address:
+          type: string
+          example: "123 Main Street, Elpis, 12345"
+    NewUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          example: "johndoe@example.com"
+        address:
+          type: string
+          example: "123 Main Street, Elpis, 12345"
+      required:
+        - "name"
+        - "email"
+        - "address"
+    Game:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Signalis"
+        publisher:
+          type: string
+          example: "Rose-engine"
+        condition:
+          type: string
+          enum:
+            - "mint"
+            - "good"
+            - "fair"
+            - "poor"
+          example: "mint"
+    NewGame:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Signalis"
+        publisher:
+          type: string
+          example: "Rose-engine"
+        condition:
+          type: string
+          enum:
+            - "mint"
+            - "good"
+            - "fair"
+            - "poor"
+          example: "mint"
+      required:
+        - "name"
+        - "publisher"
+        - "condition"
+    Offer:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        offeror:
+          type: string
+          format: uuid
+        offeree:
+          type: string
+          format: uuid
+        gamesOffered:
+          type: array
+          items:
+            type: string
+            format: uuid
+        gamesRequested:
+          type: array
+          items:
+            type: string
+            format: uuid
+        timestamp:
+          type: string
+        status:
+          type: string
+          enum:
+            - "pending"
+            - "accepted"
+            - "rejected"
+    NewOffer:
+      type: object
+      properties:
+        offeror:
+          type: string
+          format: uuid
+        offeree:
+          type: string
+          format: uuid
+        gamesOffered:
+          type: array
+          items:
+            type: string
+            format: uuid
+        gamesRequested:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+        - "offeror"
+        - "offeree"
+        - "gamesOffered"
+        - "gamesRequested"
